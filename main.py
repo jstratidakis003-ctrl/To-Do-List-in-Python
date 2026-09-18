@@ -24,23 +24,25 @@ def help_():
         Gives the user a list of the avalable choices 
     """ 
 
-    print("Enter 1 to enter a task")
+    print("\nEnter 1 to enter a task")
     print("Enter p to print all the tasks")
     print("Enter r to remove a task")
     print("Enter c to clear tasks")
     print("Enter q to exit")
     print("Enter d to compleat a task")
+    print("Enter pt to print a single task")
+    print("Enter e to edit a task")
 
 
 
-def save(tmpd):
+def save(tmpd,file ='tdl.json' ):
     """
         Saves the current task list to the JSON file.
         
         This keeps any changes made to the tasks, such as adding,
         removing, or clearing tasks, after the program closes.
     """
-    with open('tdl.json', 'w') as tdl:
+    with open(file, 'w') as tdl:
         json.dump(tmpd, tdl, indent=4)
 
 def add_task():
@@ -82,7 +84,9 @@ def print_tdl():
     """
     a = 0
     for i in load():
-        print(f"\nNumber: {a} {i}")
+        print(f"\nNumber: {a}: ")
+        for c in i.items():
+            print(f" {c}")
         a +=1
 
 
@@ -98,19 +102,19 @@ def remove_tasl():
     """ 
     tdl = load()
     print_tdl()
-    while True:
-        try:
-            i  = input("\nEnter task number you wont to deleate or q to cancel: ")
-            print(f"\nDeleted task {tdl[int(i)]}")
-            tdl.pop(int(i))
-            save(tdl)
-            break
-        except(ValueError , IndexError):
-            if i == 'q':
-                print("\nCanceled ")
-                break
-            print(f"\nEnter a number from 0-{len(tdl)}")
-    
+    i  = check_num("you wont to deleate ")
+    if exit_check(i):
+        return
+    print(f"\nDeleted task {tdl[int(i)]}")
+    tdl.pop(int(i))
+    save(tdl)
+
+def exit_check(n):
+    if n == 'q':
+        return True
+    else:
+        return False
+
 def done():
     """
         # Displays the saved tasks so the user can choose which task to complete.
@@ -121,19 +125,46 @@ def done():
     """
     print_tdl()
     tdl = load()
+    i = check_num("that has been compleated ")
+    if exit_check(i):
+        return
+    tdl[i]["Done"] = True 
+    tdl[i]["Finised time time"] = f"{datetime.date.today()} {now.hour}:{now.minute} "
+    save(tdl)
+    print("\nCompleated Task: ")
+    print_task(i)
+    
+        
+
+def print_task(num):
+    tdl = load()
+    print("\n", tdl[num])
+
+
+def edit():
+    print_tdl()
+    tdl =load()
+    c = check_num()
+    if exit_check(c):
+        return
+    tdl[c]["Task"] = input("\nEnter edited task: ")
+    save(tdl)
+        
+def check_num(a=""):
+    tdl = load()
     while True:
-        try: 
-            num = input("\nEnter compleated task number: ")
-            i = int(num)
-            tdl[i]["Done"] = True 
-            tdl[i]["Finised time time"] = f"{datetime.date.today()} {now.hour}:{now.minute} "
-            save(tdl)
-            break
-        except(ValueError, IndexError):
-            if num == 'q':
-                print("\nCanceled ")
-                break
-            print(f"\nEnter a number from 0-{len(tdl)}")
+        try:
+            t_num = input(f"\nEnter task number {a}or q to exit: ")
+            num = int(t_num)
+            if num >=0 and num <= len(tdl):
+                return num
+            else:
+                print(f"\nEnter a number in range of [0-{len(tdl)}] ") 
+        except(ValueError):
+            if t_num == 'q':
+                print("\nAction canceld exiting")
+                return t_num
+            print(f"\nEnter a number in range of [0-{len(tdl)}]")
 
 
 def main_():
@@ -160,6 +191,10 @@ def main_():
             help_()
         elif ac == 'd':
             done()
+        elif ac == 'pt':
+            print_task(check_num())
+        elif ac == 'e':
+            edit()
 
 
 main_()
