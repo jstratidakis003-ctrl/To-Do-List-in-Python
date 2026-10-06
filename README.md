@@ -1,16 +1,21 @@
-  Python To-Do List 
+Python To-Do List
 
-A simple To-Do List application built with Python.
+A simple Python command-line To-Do List application that stores tasks using JSON files.
 
-This project allows users to create, manage, and complete tasks.
-It stores tasks in a JSON file so they can be saved between program sessions.
+Features
+Add new tasks
+Edit and remove tasks
+Mark tasks as completed
+Schedule tasks with a date
+View completed tasks
+Create multiple To-Do lists
+Switch between different task files
+Create and load backups
+Store all data in JSON files
+How to Run
 
-  Features
+Make sure Python is installed, then run:
 
-- Add new tasks
-- Display all saved tasks
-- Remove tasks
-- Clear all tasks
-- Mark tasks as completed
-- Record task start and completion times
-- Save tasks using JSON
+python main.py
+
+The program will create and use JSON files to store your tasks.
